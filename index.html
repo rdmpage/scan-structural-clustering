@@ -1,0 +1,482 @@
+<html>
+<head>
+	<script src="graphlib.js"></script>
+ 
+</head>
+<body>
+<script>
+
+//----------------------------------------------------------------------------------------
+function graph_to_dot(g) {
+	// display graph
+	var dot = 'graph {' + "\n";
+
+	g.nodes().forEach(function(v) {
+		dot += '"' + v + '";' + "\n";
+	});
+
+	g.edges().forEach(function(v) {
+		dot += '"' + v.v + '" -- "' + v.w + '"' + "\n"; // ' [label="' + g.edge(v).weight + '"];' + "\n";
+	 });
+	 dot += '}';
+
+  return dot;
+}
+
+//----------------------------------------------------------------------------------------
+// https://dmitripavlutin.com/javascript-queue/
+class Queue {
+  constructor() {
+    this.items = {};
+    this.headIndex = 0;
+    this.tailIndex = 0;
+  }
+  enqueue(item) {
+    this.items[this.tailIndex] = item;
+    this.tailIndex++;
+  }
+  dequeue() {
+    const item = this.items[this.headIndex];
+    delete this.items[this.headIndex];
+    this.headIndex++;
+    return item;
+  }
+  peek() {
+    return this.items[this.headIndex];
+  }
+  get length() {
+    return this.tailIndex - this.headIndex;
+  }
+}
+
+//----------------------------------------------------------------------------------------
+
+// Create a new directed graph
+var g = new graphlib.Graph();
+
+
+if (1)
+{
+	// create SCAN graph
+	g.setEdge("0", "1");
+	g.setEdge("0", "4");
+	g.setEdge("0", "5");
+	g.setEdge("0", "6");
+
+	g.setEdge("1", "2");
+	g.setEdge("1", "5");
+
+	g.setEdge("2", "3");
+	g.setEdge("2", "5");
+
+	g.setEdge("3", "4");
+	g.setEdge("3", "5");
+	g.setEdge("3", "6");
+
+	g.setEdge("4", "5");
+	g.setEdge("4", "6");
+
+	g.setEdge("6", "7");
+	g.setEdge("6", "10");
+	g.setEdge("6", "11");
+
+	g.setEdge("7", "8");
+	g.setEdge("7", "11");
+	g.setEdge("7", "12");
+
+	g.setEdge("8", "9");
+	g.setEdge("8", "12");
+
+	g.setEdge("9", "10");
+	g.setEdge("9", "12");
+	g.setEdge("9", "13");
+
+	g.setEdge("10", "11");
+	g.setEdge("10", "12");
+
+	g.setEdge("11", "12");
+}
+
+
+if (0)
+{
+	// LUCID
+g.setEdge("A", "C");
+g.setEdge("A", "D");
+g.setEdge("A", "E");
+g.setEdge("A", "F");
+g.setEdge("A", "G");
+
+g.setEdge("B", "C");
+g.setEdge("B", "D");
+
+g.setEdge("C", "D");
+g.setEdge("C", "P");
+
+g.setEdge("F", "G");
+
+
+}
+
+if (0)
+{
+	// create SCAN graph
+	
+	g.setEdge("1", "2");
+	g.setEdge("1", "4");
+	g.setEdge("1", "6");
+	g.setEdge("1", "8");
+	g.setEdge("1", "13");
+	
+
+	g.setEdge("2", "4");
+	g.setEdge("2", "6");
+	g.setEdge("2", "8");
+	g.setEdge("2", "13");
+
+	g.setEdge("3", "4");
+	g.setEdge("3", "13");
+	g.setEdge("3", "14");
+	g.setEdge("3", "7");
+	g.setEdge("3", "8");
+
+	g.setEdge("4", "15");
+	g.setEdge("4", "13");
+	g.setEdge("4", "14");
+	g.setEdge("4", "7");
+	g.setEdge("4", "8");
+
+	g.setEdge("5", "4");
+	g.setEdge("5", "15");
+	g.setEdge("5", "16");
+	
+	g.setEdge("6", "15");
+	g.setEdge("6", "7");
+	g.setEdge("6", "13");
+	g.setEdge("6", "14");
+	
+	g.setEdge("7", "15");
+
+	g.setEdge("8", "15");
+
+	g.setEdge("10", "11");
+	g.setEdge("10", "16");
+	g.setEdge("10", "12");
+
+	g.setEdge("11", "12");
+
+	g.setEdge("9", "12");
+	g.setEdge("9", "11");
+	g.setEdge("9", "10");
+}
+
+if (0)
+{
+	// DTAR
+g.setEdge("0", "1");
+g.setEdge("0", "5");
+g.setEdge("0", "6");
+
+g.setEdge("1", "2");
+g.setEdge("1", "6");
+
+g.setEdge("2", "3");
+g.setEdge("2", "6");
+
+g.setEdge("3", "4");
+g.setEdge("3", "8");
+g.setEdge("3", "12");
+
+g.setEdge("4", "5");
+g.setEdge("4", "6");
+
+g.setEdge("5", "6");
+
+g.setEdge("7", "8");
+g.setEdge("7", "9");
+g.setEdge("7", "12");
+g.setEdge("7", "13");
+
+g.setEdge("8", "9");
+g.setEdge("8", "13");
+
+g.setEdge("9", "10");
+g.setEdge("9", "13");
+
+g.setEdge("10", "13");
+
+g.setEdge("11", "13");
+
+g.setEdge("12", "13");
+
+
+
+}
+
+if (0)
+{
+// PLoS example https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0159161
+	
+g.setEdge("0", "1");
+g.setEdge("0", "2");
+g.setEdge("1", "2");
+
+g.setEdge("2", "3");
+
+g.setEdge("3", "4");
+g.setEdge("3", "5");
+g.setEdge("3", "6");
+
+
+g.setEdge("4", "5");
+
+g.setEdge("5", "6");
+g.setEdge("5", "7");
+
+g.setEdge("6", "7");
+
+g.setEdge("7", "8");
+
+}
+
+// show it to check it's OK
+var dot = graph_to_dot(g);
+
+console.log(dot);
+
+
+//----------------------------------------------------------------------------------------
+
+// go
+
+
+var eps 	= 0.75; // minimum structural similarity
+var mu 		= 2; // minimum number of members
+
+
+g.nodes().forEach(function(v) {
+	//console.log("edges for " + v + " = " + JSON.stringify(g.nodeEdges(v)));
+});
+
+//-----------------------------------------------------------------------------------------
+// compute number of neighbours with sigma >= eps for each node
+
+// initialise each set to be empty
+var ne = []; // e-neighborhood
+g.nodes().forEach(function(v) {
+	ne[v] = [];
+});
+
+// for each edge compute size of intersection   
+g.edges().forEach(function(e) {
+	console.log(e.v + ' ' + e.w);
+
+	// neighbours of v
+	var vset = [];
+	
+	g.nodeEdges(e.v).forEach(function(edge) {
+		if (vset.indexOf(edge.v) == -1) {
+			vset.push(edge.v);
+		}
+		if (vset.indexOf(edge.w) == -1) {
+			vset.push(edge.w);
+		}
+	});
+	
+	console.log(JSON.stringify(vset));
+	
+	// neighbours of w
+	var wset = [];
+	
+	g.nodeEdges(e.w).forEach(function(edge) {
+		if (wset.indexOf(edge.v) == -1) {
+			wset.push(edge.v);
+		}
+		if (wset.indexOf(edge.w) == -1) {
+			wset.push(edge.w);
+		}
+	});
+	
+	console.log(JSON.stringify(wset));
+	
+	// neighbours in common
+	var intersection = vset.filter(function(n) {
+    	return wset.indexOf(n) !== -1;
+	});
+	
+	console.log("intersection=" + JSON.stringify(intersection));
+	
+	// compute structural similarity 
+	var sigma = intersection.length / (Math.sqrt(vset.length * wset.length));
+	
+	// if similarity greater than threshold, add nodes to each other's e-neighbourhood
+	if (sigma >= eps ) {
+		ne[e.v].push(e.w);
+		ne[e.w].push(e.v);
+	}
+	
+	console.log(sigma);
+	
+	//console.log(JSON.stringify(g.nodeEdges(e.v)));
+	//console.log(JSON.stringify(g.nodeEdges(e.w)));
+	
+});
+
+//-----------------------------------------------------------------------------------------
+// dump e-neighbourhoods
+if (1) {
+	console.log("e-neighbourhoods for each node");
+	g.nodes().forEach(function(v) {
+		console.log(v + ' ' + JSON.stringify(ne[v]));
+	});
+}
+
+//-----------------------------------------------------------------------------------------
+//var unclassified = g.nodes();
+
+
+var cluster_id = 0;
+var cluster = {};
+g.nodes().forEach(function(v) {
+	cluster[v] = 0; // 0 = unclassified, -1 = non member, >= 1 = cluster
+});
+
+g.nodes().forEach(function(v) {
+	if (cluster[v] == 0) {
+
+		console.log("step 1");
+	
+		console.log("v=" + v);
+	
+
+		// STEP 1. check whether v is a core;
+		// i.e., does its e-neighbourhood have >= mu nodes?
+	
+		if (ne[v].length >= mu) {
+
+			console.log("step 2.1");
+
+			// STEP 2.1. if v is a core, a new cluster is expanded;
+			cluster_id++;
+			cluster[v] = cluster_id;
+			
+			console.log("cluster number=" + cluster_id);
+		
+			var Q = new Queue();
+						
+			// everything structure reachable from v is added to the queue
+			for (var x in ne[v]) {
+				console.log("enqueue " + ne[v][x]);
+				Q.enqueue(ne[v][x]);
+			}
+		
+			while (Q.length > 0) {
+				var y = Q.dequeue();
+				console.log("dequeue y=" + y);
+			
+				// DirREACHε,μ(v, w) ⇔ COREε,μ(v) ∧ w ∈ Nε(v)
+				// R = {x ∈ V | DirREACHε,μ(y, x)};
+			
+				console.log("ne[y]=" + JSON.stringify(ne[y]));
+			
+				// nodes directly reacheable from y 
+				var R = [];			
+				if (ne[y].length >= mu) {
+					R = ne[y];
+				}
+			
+				console.log("y=" + y + ", R=" + JSON.stringify(R));
+						
+				for (var x in R) {
+					// 
+					console.log("x=" + R[x]);
+					
+					if (cluster[R[x]] == -1) {
+						cluster[R[x]] = cluster_id;
+					}
+					
+					if (cluster[R[x]] == 0) {
+						cluster[R[x]] = cluster_id;
+						Q.enqueue(R[x]);
+					}
+				}			
+				//debugger;
+			}
+			
+			console.log("cluster=" + JSON.stringify(cluster));
+			
+		} else {
+			console.log("step 2.2");
+			// STEP 2.2. if v is not a core, it is labeled as non-member	
+			cluster[v] = -1;
+		}
+	}
+});
+
+/*
+// Step 3
+for (var v in non_member) {
+	if (1) {
+		// hub
+	} else {
+		// outlier
+	}
+}
+*/
+
+// output
+
+console.log(JSON.stringify(cluster));
+//console.log(JSON.stringify(non_member));
+
+
+/*
+// Add node "a" to the graph with no label
+g.setNode("a");
+
+g.hasNode("a");
+// => true
+
+// Add node "b" to the graph with a String label
+g.setNode("b", "b's value");
+
+// Get the label for node b
+g.node("b");
+// => "b's value"
+
+// Add node "c" to the graph with an Object label
+g.setNode("c", { k: 123 });
+
+// What nodes are in the graph?
+console.log(JSON.stringify(g.nodes()));
+// => `[ 'a', 'b', 'c' ]`
+
+// Add a directed edge from "a" to "b", but assign no label
+g.setEdge("a", "b");
+
+// Add a directed edge from "c" to "d" with an Object label.
+// Since "d" did not exist prior to this call it is automatically
+// created with an undefined label.
+g.setEdge("c", "d", { k: 456 });
+
+// What edges are in the graph?
+g.edges();
+// => `[ { v: 'a', w: 'b' },
+//       { v: 'c', w: 'd' } ]`.
+
+// Which edges leave node "a"?
+g.outEdges("a");
+// => `[ { v: 'a', w: 'b' } ]`
+
+// Which edges enter and leave node "d"?
+g.nodeEdges("d");
+// => `[ { v: 'c', w: 'd' } ]`
+
+
+*/
+
+
+
+</script>
+</body>
+</html>	
